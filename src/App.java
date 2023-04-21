@@ -36,7 +36,7 @@ public class App {
 
     static boolean salir = false;
     // VARIABLES CREAR EDITAR
-    
+
     static Integer contadorFinal = 1;
     static Connection con = null;
     static Statement stmt = null;
@@ -44,8 +44,6 @@ public class App {
     static Statement stmt3 = null;
     static Statement stmt4 = null;
     static Statement stmt5 = null;
-
-   
 
     public static void main(String[] args) throws SQLException {
 
@@ -84,7 +82,7 @@ public class App {
 
     }
 
-     public static void iniciarSesion() {
+    public static void iniciarSesion() {
         // Crear ventana y panel principal
         JFrame ventana = new JFrame("Iniciar Sesión");
         JPanel panelPrincipal = new JPanel(new BorderLayout());
@@ -101,7 +99,9 @@ public class App {
         JTextField txtPassword = new JTextField();
 
         // Añadir etiquetas y campos de texto al panel de campos
+        panelCampos.add(email);
         panelCampos.add(txtEmail);
+        panelCampos.add(password);
         panelCampos.add(txtPassword);
 
         // Crear botones y añadirlos al panel de botones
@@ -110,67 +110,6 @@ public class App {
         JButton btnSalir = new JButton("Salir");
         panelBotones.add(btnGuardar);
         panelBotones.add(btnSalir);
-        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
-
-        // Añadir el panel principal a la ventana y configurar la ventana
-        ventana.add(panelPrincipal);
-        ventana.pack();
-        ventana.setLocationRelativeTo(null);
-        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        ventana.setVisible(true);
-
-    }
-
-    public void mostrarVentana() {
-        // Crear ventana y panel principal
-        JFrame ventana = new JFrame("Crear Cliente");
-        JPanel panelPrincipal = new JPanel(new BorderLayout());
-
-        // Crear panel de campos y añadirlos al panel principal
-        JPanel panelCampos = new JPanel(new GridLayout(7, 2));
-        panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panelPrincipal.add(panelCampos, BorderLayout.CENTER);
-
-        // Crear etiquetas y campos de texto para cada campo
-        JLabel lblNIF = new JLabel("NIF:");
-        JTextField txtNIF = new JTextField();
-        JLabel lblNombre = new JLabel("Nombre:");
-        JTextField txtNombre = new JTextField();
-        JLabel lblApellido1 = new JLabel("Apellido 1:");
-        JTextField txtApellido1 = new JTextField();
-        JLabel lblApellido2 = new JLabel("Apellido 2:");
-        JTextField txtApellido2 = new JTextField();
-        JLabel lblEmpresa = new JLabel("Empresa:");
-        JTextField txtEmpresa = new JTextField();
-        JLabel lblTelefono = new JLabel("Teléfono:");
-        JTextField txtTelefono = new JTextField();
-        JLabel lblEmail = new JLabel("Correo electrónico:");
-        JTextField txtEmail = new JTextField();
-
-        // Añadir etiquetas y campos de texto al panel de campos
-        panelCampos.add(lblNIF);
-        panelCampos.add(txtNIF);
-        panelCampos.add(lblNombre);
-        panelCampos.add(txtNombre);
-        panelCampos.add(lblApellido1);
-        panelCampos.add(txtApellido1);
-        panelCampos.add(lblApellido2);
-        panelCampos.add(txtApellido2);
-        panelCampos.add(lblEmpresa);
-        panelCampos.add(txtEmpresa);
-        panelCampos.add(lblTelefono);
-        panelCampos.add(txtTelefono);
-        panelCampos.add(lblEmail);
-        panelCampos.add(txtEmail);
-
-        // Crear botones y añadirlos al panel de botones
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnSalir = new JButton("Salir");
-        JButton btnLimpiar = new JButton("Limpiar");
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnSalir);
-        panelBotones.add(btnLimpiar);
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         // Añadir el panel principal a la ventana y configurar la ventana
@@ -306,7 +245,7 @@ public class App {
     }
 
     public static void editar(Integer id) throws SQLException {
-        
+
     }
 
     public static void conexionbbdd() throws SQLException {
@@ -339,14 +278,13 @@ public class App {
 
     }
 
-
     public static void insertarUsuarios() throws SQLException {
         String createString = "create table notasCRUD.USUARIOS " +
-            "(ID integer NOT NULL," +
-            "EMAIL varchar(70) NOT NULL UNIQUE," +
-            "PASSWORD varchar(20) NOT NULL," +
-            "NAME varchar(40) NOT NULL," +
-            "PRIMARY KEY (ID))";
+                "(ID integer NOT NULL," +
+                "EMAIL varchar(70) NOT NULL UNIQUE," +
+                "PASSWORD varchar(20) NOT NULL," +
+                "NAME varchar(40) NOT NULL," +
+                "PRIMARY KEY (ID))";
 
         // creacion de tabla
         try {
@@ -373,13 +311,12 @@ public class App {
         }
     }
 
-
     public static void insertarNotas() throws SQLException {
         String createString = "create table notasCRUD.NOTAS " +
-            "(ID integer NOT NULL," +
-            "CONTENT varchar(200) NOT NULL," +
-            "idUser integer NOT NULL," +
-            "PRIMARY KEY (ID))";
+                "(ID integer NOT NULL," +
+                "CONTENT varchar(200) NOT NULL," +
+                "idUser integer NOT NULL," +
+                "PRIMARY KEY (ID))";
 
         // creacion de tabla
         try {
@@ -406,9 +343,8 @@ public class App {
         }
     }
 
-
     public static void insertarDatos() throws SQLException {
-       insertarNotas();
-       insertarDatos();
+        insertarNotas();
+        insertarDatos();
     }
 }
