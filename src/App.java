@@ -379,6 +379,7 @@ public class App {
             "(ID integer NOT NULL," +
             "CONTENT varchar(200) NOT NULL," +
             "idUser integer NOT NULL," +
+            "sharedUsers SET() NOT NULL," +
             "PRIMARY KEY (ID))";
 
         // creacion de tabla
@@ -396,9 +397,9 @@ public class App {
         try {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "1, 'marc@gmail.com', '12345', 'Marc')");
-            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
-                    + "2, 'aaron@gmail.com', '12345', 'Aaron')");
+                    + "1, 'Lista de la compra', '1', '1', '2')");
+            stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
+                    + "2, 'Notas ocultas', '1', '1', '2')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -409,6 +410,6 @@ public class App {
 
     public static void insertarDatos() throws SQLException {
        insertarNotas();
-       insertarDatos();
+       insertarUsuarios();
     }
 }
