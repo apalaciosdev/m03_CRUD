@@ -36,15 +36,7 @@ public class App {
 
     static boolean salir = false;
     // VARIABLES CREAR EDITAR
-    static boolean dniBoolean = false;
-    static boolean dniBoolean2 = false;
-    static boolean nombreBoolean = false;
-    static boolean apellido1Boolean = false;
-    static boolean apellido2Boolean = false;
-    static boolean empresaBoolean = false;
-    static boolean telBoolean = false;
-    static boolean mailBoolean = false;
-
+    
     static Integer contadorFinal = 1;
     static Connection con = null;
     static Statement stmt = null;
@@ -53,20 +45,7 @@ public class App {
     static Statement stmt4 = null;
     static Statement stmt5 = null;
 
-    // VALORES
-    static String dni = "";
-    static String nombre = "";
-    static String nombreNew = "";
-    static String apellido1 = "";
-    static String apellido1New = "";
-    static String apellido2 = "";
-    static String apellido2New = "";
-    static String empresa = "";
-    static String empresaNew = "";
-    static String telefono = "";
-    static String telefonoNew = "";
-    static String correo = "";
-    static String correoNew = "";
+   
 
     public static void main(String[] args) throws SQLException {
 
@@ -74,7 +53,7 @@ public class App {
         conexionbbdd();
 
         // EJECUTA LA FUNCIÓN QUE MUESTRA EL MENÚ
-        menuoptions();
+        iniciarSesion();
     }
 
     public static void menuoptions() throws SQLException {
@@ -102,6 +81,43 @@ public class App {
                 salir = true;
             }
         }
+
+    }
+
+     public static void iniciarSesion() {
+        // Crear ventana y panel principal
+        JFrame ventana = new JFrame("Iniciar Sesión");
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+
+        // Crear panel de campos y añadirlos al panel principal
+        JPanel panelCampos = new JPanel(new GridLayout(7, 2));
+        panelCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panelPrincipal.add(panelCampos, BorderLayout.CENTER);
+
+        // Crear etiquetas y campos de texto para cada campo
+        JLabel email = new JLabel("Email:");
+        JTextField txtEmail = new JTextField();
+        JLabel password = new JLabel("Password:");
+        JTextField txtPassword = new JTextField();
+
+        // Añadir etiquetas y campos de texto al panel de campos
+        panelCampos.add(txtEmail);
+        panelCampos.add(txtPassword);
+
+        // Crear botones y añadirlos al panel de botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton btnGuardar = new JButton("Iniciar Sesión");
+        JButton btnSalir = new JButton("Salir");
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnSalir);
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+
+        // Añadir el panel principal a la ventana y configurar la ventana
+        ventana.add(panelPrincipal);
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ventana.setVisible(true);
 
     }
 
@@ -262,208 +278,6 @@ public class App {
     }
 
     public static void crear() throws SQLException {
-        // PONEMOS VARIABLES A FALSE
-        dniBoolean = false;
-        dniBoolean2 = false;
-        nombreBoolean = false;
-        apellido1Boolean = false;
-        apellido2Boolean = false;
-        empresaBoolean = false;
-        telBoolean = false;
-        mailBoolean = false;
-
-        // HACEMOS LAS PREGUNTAS Y LA GUARDAMOS EN VARIABLES
-        do {
-            dni = JOptionPane.showInputDialog(null, "INTRODUCE EL DNI ");
-            String query4 = "select COUNT(DNI) from mgallegopt1.CLIENTE WHERE DNI = '"
-                    + dni + "'";
-            stmt4 = con.createStatement();
-            ResultSet rs = stmt4.executeQuery(query4);
-
-            if (dni.isEmpty() || dni.length() != 9) {
-                JOptionPane.showMessageDialog(null, "DNI NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-
-            } else {
-
-                dniBoolean = true;
-            }
-
-            while (rs.next()) {
-                Integer count = rs.getInt("COUNT(DNI)");
-                if (count == 0) {
-                    dniBoolean2 = true;
-                } else {
-                    JOptionPane.showMessageDialog(null, "DNI YA REGISTRADO",
-                            "ALGO HA SALIDO MAL",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-            }
-
-        } while (dni.isEmpty() || dni.length() != 9 || !dniBoolean || !dniBoolean2);
-
-        do {
-            nombre = JOptionPane.showInputDialog(null, "INTRODUCE EL NOMBRE ");
-
-            if (nombre.isEmpty() || nombre.length() >= 40) {
-                JOptionPane.showMessageDialog(null, "NOMBRE NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
-                nombreBoolean = true;
-            }
-
-        } while (nombre.isEmpty() || nombre.length() >= 40 || !nombreBoolean);
-
-        do {
-            apellido1 = JOptionPane.showInputDialog("INTRODUCE EL PRIMER APELLIDO ");
-
-            if (apellido1.isEmpty() || apellido1.length() >= 50) {
-                JOptionPane.showMessageDialog(null, "PRIMER APELLIDO NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
-                apellido1Boolean = true;
-            }
-
-        } while (apellido1.isEmpty() || apellido1.length() >= 50 || !apellido1Boolean);
-
-        do {
-            apellido2 = JOptionPane.showInputDialog("INTRODUCE EL SEGUNDO APELLIDO ");
-
-            if (apellido2.isEmpty() || apellido2.length() >= 50) {
-                JOptionPane.showMessageDialog(null, "SEGUNDO APELLIDO NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
-                apellido2Boolean = true;
-            }
-
-        } while (apellido2.isEmpty() || apellido2.length() >= 50 || !apellido2Boolean);
-
-        do {
-            empresa = JOptionPane.showInputDialog("INTRODUCE EL NOMBRE DE LA EMPRESA ");
-
-            if (empresa.isEmpty() || empresa.length() >= 20) {
-                JOptionPane.showMessageDialog(null, "NOMBRE DE EMPRESA NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
-                empresaBoolean = true;
-            }
-
-        } while (empresa.isEmpty() || empresa.length() >= 20 || !empresaBoolean);
-
-        do {
-            telefono = JOptionPane.showInputDialog("INTRODUCE EL NÚMERO DE TELÉFONO ");
-            for (int i = 0; i < telefono.length(); i++) {
-                char c = telefono.charAt(i);
-                if (c <= '0' || c >= '9') {
-                    JOptionPane.showMessageDialog(null, "LETRA DETECTADA, SOLO NÚMEROS",
-                            "ALGO HA SALIDO MAL",
-                            JOptionPane.ERROR_MESSAGE);
-
-                } else {
-
-                    if (telefono.isEmpty() || telefono.length() != 9) {
-                        JOptionPane.showMessageDialog(null, "TELÉFONO NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                        i = telefono.length();
-                    } else {
-                        telBoolean = true;
-                        i = telefono.length();
-                    }
-                }
-            }
-
-        } while (telefono.isEmpty() || telefono.length() != 9 || !telBoolean);
-
-        do {
-            correo = JOptionPane.showInputDialog("INTRODUCE EL CORREO ELECTRÓNICO ");
-
-            // Patrón para validar el email
-            Pattern pattern = Pattern
-                    .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-
-            java.util.regex.Matcher mather = pattern.matcher(correo);
-
-            if (mather.find() == true) {
-                if (correo.isEmpty() || correo.length() >= 70) {
-                    JOptionPane.showMessageDialog(null, "CORREO NO VÁLIDO",
-                            "ALGO HA SALIDO MAL",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    mailBoolean = true;
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "CORREO NO VÁLIDO",
-                        "ALGO HA SALIDO MAL",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-
-        } while (correo.isEmpty() || correo.length() >= 70 || !mailBoolean);
-
-        if (dniBoolean && nombreBoolean && apellido1Boolean && apellido2Boolean && empresaBoolean && telBoolean
-                && mailBoolean) {
-            try {
-                String[] botones = { "Crear", "Limpiar", "Salir" };
-                // EMPEZAMOS CON EL MENU
-                int ventana = JOptionPane.showOptionDialog(null,
-                        "\n Nombre: " + nombre + "\n 1r Apellido: " + apellido1
-                                + "\n 2º Apellido: "
-                                + apellido2 + "\n Empresa: " + empresa + "\n Teléfono: " + telefono
-                                + "\n Correo: "
-                                + correo,
-                        "EDICIÓN DE UN CLIENTE",
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE, null,
-                        botones, botones[0]);
-                if (ventana == 0) {
-                    stmt = con.createStatement();
-
-                    // BUSCAMOS EL ID Y LE SUMAMOS UNO
-                    String query4 = "select DNI from mgallegopt1.CLIENTE";
-                    stmt4 = con.createStatement();
-                    ResultSet rs = stmt4.executeQuery(query4);
-
-                    while (rs.next()) {
-                        contadorFinal = contadorFinal + 1;
-                    }
-
-                    // HACEMOS LA QUERY QUE EJECUTAMOS PARA INSERTAR LOS DATOS
-                    stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
-                            + "" + contadorFinal + ", '" + dni + "', '"
-                            + nombre + "', '"
-                            + apellido1 + "', '"
-                            + apellido2 + "', '" + empresa + "', '"
-                            + telefono + "', '" + correo + "')");
-                    JOptionPane.showMessageDialog(null, "CREADO CORRECTAMENTE",
-                            "CREADO CORRECTAMENTE",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else if (ventana == 1) {
-                    crear();
-                } else if (ventana == 1) {
-                    JOptionPane.showMessageDialog(null, "CLIENTE NO CREADO",
-                            "ERROR EN LA CREACIÓN",
-                            JOptionPane.ERROR_MESSAGE);
-                    menuoptions();
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                stmt.close();
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "HA OCURRIDO UN ERROR EN ALGÚN CAMPO",
-                    "ALGO HA SALIDO MAL",
-                    JOptionPane.ERROR_MESSAGE);
-            menuoptions();
-        }
 
     }
 
@@ -492,202 +306,7 @@ public class App {
     }
 
     public static void editar(Integer id) throws SQLException {
-        // PONEMOS VARIABLES A FALSE
-        dniBoolean = false;
-        dniBoolean2 = false;
-        nombreBoolean = false;
-        apellido1Boolean = false;
-        apellido2Boolean = false;
-        empresaBoolean = false;
-        telBoolean = false;
-        mailBoolean = false;
-
-        // HACEMOS LA QUERY
-        String query2 = "select NOMBRE, APELLIDO1, APELLIDO2, EMPRESA, TELEFONO, CORREO from mgallegopt1.CLIENTE where ID = "
-                + id;
-
-        try {
-            stmt = con.createStatement();
-            stmt2 = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query2);
-            String[] botones = { "Guardar", "Salir" };
-
-            // MOSTRAMOS CON UN BUCLE TODO LO QUE HA DEVUELTO LA QUERY
-            while (rs.next()) {
-                String nombre = rs.getString("NOMBRE");
-                String apellido1 = rs.getString("APELLIDO1");
-                String apellido2 = rs.getString("APELLIDO2");
-                String empresa = rs.getString("EMPRESA");
-                String telefono = rs.getString("TELEFONO");
-                String correo = rs.getString("CORREO");
-
-                // HACEMOS LAS PREGUNTAS Y LA GUARDAMOS EN VARIABLES
-                do {
-                    nombreNew = JOptionPane.showInputDialog(null, "INTRODUCE EL NUEVO NOMBRE ", nombre);
-
-                    if (nombreNew.isEmpty() || nombreNew.length() >= 40) {
-                        JOptionPane.showMessageDialog(null, "NOMBRE NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        nombreBoolean = true;
-                    }
-
-                } while (nombreNew.isEmpty() || nombreNew.length() >= 40 || !nombreBoolean);
-
-                // EDITAMOS APELLIDOS
-                do {
-                    apellido1New = JOptionPane.showInputDialog("INTRODUCE EL NUEVO PRIMER APELLIDO ", apellido1);
-
-                    if (apellido1New.isEmpty() || apellido1New.length() >= 50) {
-                        JOptionPane.showMessageDialog(null, "PRIMER APELLIDO NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        apellido1Boolean = true;
-                    }
-
-                } while (apellido1New.isEmpty() || apellido1New.length() >= 50 || !apellido1Boolean);
-
-                do {
-                    apellido2New = JOptionPane.showInputDialog("INTRODUCE EL NUEVO SEGUNDO APELLIDO ", apellido2);
-
-                    if (apellido2New.isEmpty() || apellido2New.length() >= 50) {
-                        JOptionPane.showMessageDialog(null, "SEGUNDO APELLIDO NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        apellido2Boolean = true;
-                    }
-
-                } while (apellido2New.isEmpty() || apellido2New.length() >= 50 || !apellido2Boolean);
-
-                // EDITAMOS EMPRESA
-                do {
-                    empresaNew = JOptionPane.showInputDialog("INTRODUCE EL NUEVO NOMBRE DE LA EMPRESA ", empresa);
-
-                    if (empresaNew.isEmpty() || empresaNew.length() >= 20) {
-                        JOptionPane.showMessageDialog(null, "NOMBRE DE EMPRESA NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        empresaBoolean = true;
-                    }
-
-                } while (empresaNew.isEmpty() || empresaNew.length() >= 20 || !empresaBoolean);
-
-                // EDITAMOS TELEFONO
-                do {
-                    telefonoNew = JOptionPane.showInputDialog("INTRODUCE EL NUEVO NÚMERO DE TELÉFONO ", telefono);
-                    for (int i = 0; i < telefonoNew.length(); i++) {
-                        char c = telefonoNew.charAt(i);
-                        if (c <= '0' || c >= '9') {
-                            JOptionPane.showMessageDialog(null, "LETRA DETECTADA, SOLO NÚMEROS",
-                                    "ALGO HA SALIDO MAL",
-                                    JOptionPane.ERROR_MESSAGE);
-
-                        } else {
-
-                            if (telefonoNew.isEmpty() || telefonoNew.length() != 9) {
-                                JOptionPane.showMessageDialog(null, "TELÉFONO NO VÁLIDO",
-                                        "ALGO HA SALIDO MAL",
-                                        JOptionPane.ERROR_MESSAGE);
-                                i = telefonoNew.length();
-                            } else {
-                                telBoolean = true;
-                                i = telefonoNew.length();
-                            }
-                        }
-                    }
-
-                } while (telefonoNew.isEmpty() || telefonoNew.length() != 9 || !telBoolean);
-
-                // EDITAMOS CORREO
-                do {
-                    correoNew = JOptionPane.showInputDialog("INTRODUCE EL NUEVO CORREO ELECTRÓNICO ", correo);
-
-                    // Patrón para validar el email
-                    Pattern pattern = Pattern
-                            .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-
-                    java.util.regex.Matcher mather = pattern.matcher(correoNew);
-
-                    if (mather.find() == true) {
-                        if (correoNew.isEmpty() || correoNew.length() >= 70) {
-                            JOptionPane.showMessageDialog(null, "CORREO NO VÁLIDO",
-                                    "ALGO HA SALIDO MAL",
-                                    JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            mailBoolean = true;
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "CORREO NO VÁLIDO",
-                                "ALGO HA SALIDO MAL",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
-
-                } while (correoNew.isEmpty() || correoNew.length() >= 70 || !mailBoolean);
-
-                // UNA VEZ PASADA LAS VALIDACIONES
-                if (nombreBoolean && apellido1Boolean && apellido2Boolean && empresaBoolean && telBoolean
-                        && mailBoolean) {
-                    try {
-                        String[] botones2 = { "Editar", "Salir" };
-                        // EMPEZAMOS CON EL MENU
-                        int ventana = JOptionPane.showOptionDialog(null,
-                                "\n Nuevo Nombre: " + nombreNew + "\n Nuevo 1r Apellido: " + apellido1New
-                                        + "\n Nuevo 2º Apellido: "
-                                        + apellido2New + "\n Nuevo Empresa: " + empresaNew + "\n Nuevo Teléfono: "
-                                        + telefonoNew
-                                        + "\n Nuevo Correo: "
-                                        + correoNew,
-                                "EDICIÓN DE UN CLIENTE",
-                                JOptionPane.DEFAULT_OPTION,
-                                JOptionPane.INFORMATION_MESSAGE, null,
-                                botones2, botones2[0]);
-                        if (ventana == 0) {
-                            stmt5 = con.createStatement();
-
-                            // ACTUALIZAMOS
-                            String query3 = "UPDATE mgallegopt1.CLIENTE SET NOMBRE = '" + nombreNew
-                                    + "', APELLIDO1 = '" + apellido1New
-                                    + "', APELLIDO2 = '" + apellido2New
-                                    + "', EMPRESA = '" + empresaNew
-                                    + "', TELEFONO = '" + telefonoNew
-                                    + "', CORREO = '" + correoNew
-                                    + "'  WHERE id = "
-                                    + id + "";
-
-                            stmt5.executeUpdate(query3);
-                            JOptionPane.showMessageDialog(null, "ACTUALIZADO CORRECTAMENTE",
-                                    "ACTUALIZACIÓN DE LA BASE DE DATOS",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(null, "CLIENTE NO ACTUALIZADO",
-                                    "ERROR EN LA EDICIÓN",
-                                    JOptionPane.ERROR_MESSAGE);
-                            menuoptions();
-                        }
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } finally {
-                        stmt5.close();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "HA OCURRIDO UN ERROR EN ALGÚN CAMPO",
-                            "ALGO HA SALIDO MAL",
-                            JOptionPane.ERROR_MESSAGE);
-                    menuoptions();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            stmt.close();
-        }
-
+        
     }
 
     public static void conexionbbdd() throws SQLException {
@@ -703,11 +322,11 @@ public class App {
     }
 
     public static void restaurarBBDD() throws SQLException {
-        String sqldb = "create database mgallegopt1";
+        String sqldb = "create database notasCRUD";
 
         try {
             stmt = con.createStatement();
-            stmt.executeUpdate("drop database mgallegopt1");
+            stmt.executeUpdate("drop database notasCRUD");
             stmt.executeUpdate(sqldb);
         } catch (SQLException e) {
 
@@ -720,17 +339,14 @@ public class App {
 
     }
 
-    public static void insertarDatos() throws SQLException {
-        String createString = "create table mgallegopt1.CLIENTE " +
-                "(ID integer NOT NULL," +
-                "DNI varchar(9) NOT NULL," +
-                "NOMBRE varchar(40) NOT NULL," +
-                "APELLIDO1 varchar(50) NOT NULL," +
-                "APELLIDO2 varchar(50) NOT NULL," +
-                "EMPRESA varchar(20) NOT NULL," +
-                "TELEFONO char(9)," +
-                "CORREO varchar(70) NOT NULL," +
-                "PRIMARY KEY (ID))";
+
+    public static void insertarUsuarios() throws SQLException {
+        String createString = "create table notasCRUD.USUARIOS " +
+            "(ID integer NOT NULL," +
+            "EMAIL varchar(70) NOT NULL UNIQUE," +
+            "PASSWORD varchar(20) NOT NULL," +
+            "NAME varchar(40) NOT NULL," +
+            "PRIMARY KEY (ID))";
 
         // creacion de tabla
         try {
@@ -746,14 +362,53 @@ public class App {
         // insercion de elementos
         try {
             stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
+                    + "1, 'marc@gmail.com', '12345', 'Marc')");
             stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
-                    + "1, '47954695V', 'Marc', 'Gallego', 'Pozo', 'Clicko', '656565656', 'marc.gallego@clicko.es')");
-            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
-                    + "2, '12345678A', 'Al-h', 'Mahma', 'Hrla', 'NASA', '678123456', 'alhmahmahrla@nasa.net')");
+                    + "2, 'aaron@gmail.com', '12345', 'Aaron')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             stmt.close();
         }
+    }
+
+
+    public static void insertarNotas() throws SQLException {
+        String createString = "create table notasCRUD.NOTAS " +
+            "(ID integer NOT NULL," +
+            "CONTENT varchar(200) NOT NULL," +
+            "idUser integer NOT NULL," +
+            "PRIMARY KEY (ID))";
+
+        // creacion de tabla
+        try {
+            stmt = con.createStatement();
+            stmt.executeUpdate(createString);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            stmt.close();
+        }
+
+        // insercion de elementos
+        try {
+            stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
+                    + "1, 'marc@gmail.com', '12345', 'Marc')");
+            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
+                    + "2, 'aaron@gmail.com', '12345', 'Aaron')");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            stmt.close();
+        }
+    }
+
+
+    public static void insertarDatos() throws SQLException {
+       insertarNotas();
+       insertarDatos();
     }
 }
