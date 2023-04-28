@@ -164,11 +164,8 @@ public class App {
 
     public static void buscar() throws SQLException {
 
-        int idUser = 1;
-
-
         // AQUÍ LA CONSULTA
-        String query = "SELECT * FROM notasCRUD.NOTAS where sharedUsers LIKE '%"+idUser+"%';";
+        String query = "SELECT * FROM notasCRUD.NOTAS where sharedUsers LIKE '%" + idUser + "%';";
 
         try {
             stmt = con.createStatement();
@@ -208,7 +205,6 @@ public class App {
             stmt.close();
         }
         con.close();
-        
 
     }
 
@@ -260,7 +256,8 @@ public class App {
 
                 // HACEMOS LAS PREGUNTAS Y LA GUARDAMOS EN VARIABLES
                 do {
-                    newContent = JOptionPane.showInputDialog(null, "INTRODUCE EL NUEVO CONTENIDO DE LA NOTA: ", content);
+                    newContent = JOptionPane.showInputDialog(null, "INTRODUCE EL NUEVO CONTENIDO DE LA NOTA: ",
+                            content);
 
                     if (newContent.isEmpty() || newContent.length() >= 200) {
                         JOptionPane.showMessageDialog(null, "CONTENIDO NO VÁLIDO",
@@ -271,7 +268,6 @@ public class App {
                     }
 
                 } while (newContent.isEmpty() || newContent.length() >= 200 || !contentBoolean);
-
 
                 // UNA VEZ PASADA LAS VALIDACIONES
                 if (contentBoolean) {
