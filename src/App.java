@@ -182,19 +182,19 @@ public class App {
         // MOSTRAMOS CON UN BUCLE TODO LO QUE HA DEVUELTO LA QUERY
 
         int ventana = JOptionPane.showOptionDialog(null,
-                "¿Desea borrar a este cliente?",
-                "ELIMINAR CLIENTE DE LA BASE DE DATOS",
+                "¿Desea borrar a esta nota?",
+                "ELIMINAR NOTA DE LA BASE DE DATOS",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.WARNING_MESSAGE, null,
                 botones, botones[0]);
         if (ventana == 0) {
-            String sql = "DELETE FROM mgallegopt1.CLIENTE WHERE id = " + id;
+            String sql = "DELETE FROM notasCRUD.NOTAS WHERE id = " + id;
             stmt3.executeUpdate(sql);
-            JOptionPane.showMessageDialog(null, "SE HA ELIMINADO EL CLIENTE DE LA BASE DE DATOS",
+            JOptionPane.showMessageDialog(null, "SE HA ELIMINADO LA NOTA DE LA BASE DE DATOS",
                     "ELIMINADO CORRECTAMENTE",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "NO SE HA ELIMINADO EL CLIENTE DE LA BASE DE DATOS",
+            JOptionPane.showMessageDialog(null, "NO SE HA ELIMINADO LA NOTA DE LA BASE DE DATOS",
                     "ERROR AL ELIMINAR",
                     JOptionPane.INFORMATION_MESSAGE);
         }
