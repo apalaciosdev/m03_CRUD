@@ -58,7 +58,7 @@ public class App {
 
     public static void menuoptions() throws SQLException {
 
-        String[] botones = { "Buscar Cliente", "Nuevo Cliente", "Restaurar Base de Datos", "Salir" };
+        String[] botones = { "Buscar Nota", "Nueva Nota", "Restaurar Base de Datos", "Salir" };
         // HACEMOS UN BUCLE QUE HASTA QUE NO LE DE A SALIR NO TERMINE
         while (!salir) {
             // CONEXION CON LA BBDD Y CREACION DE BBDD
@@ -164,96 +164,51 @@ public class App {
 
     public static void buscar() throws SQLException {
 
-        // Panel de los datos de cliente
-        JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.add(new JLabel("DNI:"));
-        JTextField dniField = new JTextField(10);
-        panel.add(dniField);
-        panel.add(new JLabel("Nombre:"));
-        JTextField nombreField = new JTextField(10);
-        panel.add(nombreField);
-        panel.add(new JLabel("Apellido:"));
-        JTextField apellidoField = new JTextField(10);
-        panel.add(apellidoField);
-        panel.add(new JLabel("Segundo apellido:"));
-        JTextField apellido2Field = new JTextField(10);
-        panel.add(apellido2Field);
-        panel.add(new JLabel("Empresa:"));
-        JTextField empresaField = new JTextField(10);
-        panel.add(empresaField);
-        panel.add(new JLabel("Teléfono:"));
-        JTextField telefonoField = new JTextField(10);
-        panel.add(telefonoField);
-        panel.add(new JLabel("Email:"));
-        JTextField emailField = new JTextField(10);
-        panel.add(emailField);
+        int idUser = 1;
 
-        // Mostrar el JOptionPane
-        int respuesta = JOptionPane.showConfirmDialog(null, panel, "Buscar cliente", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
 
-        // COMPRUEBA SI LE HAS DADO AL OK
-        if (respuesta == JOptionPane.OK_OPTION) {
-            String dniSearch = dniField.getText();
-            String nombreSearch = nombreField.getText();
-            String apellidoSearch = apellidoField.getText();
-            String apellido2Search = apellido2Field.getText();
-            String empresaSearch = empresaField.getText();
-            String telefonoSearch = telefonoField.getText();
-            String emailSearch = emailField.getText();
+        // AQUÍ LA CONSULTA
+        String query = "SELECT * FROM notasCRUD.NOTAS where sharedUsers LIKE '%"+idUser+"%';";
 
-            // AQUÍ LA CONSULTA
-            String query = "select ID, DNI, NOMBRE, APELLIDO1, APELLIDO2, EMPRESA, TELEFONO, CORREO from mgallegopt1.CLIENTE WHERE DNI = '"
-                    + dniSearch + "' OR NOMBRE = '"
-                    + nombreSearch + "';";
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String[] botones = { "Siguiente", "Editar", "Eliminar" };
+            if (rs.next()) {
+                do {
+                    Integer id = rs.getInt("ID");
+                    String contentQuery = rs.getString("CONTENT");
+                    String idUserQuery = rs.getString("idUser");
+                    String sharedUsersQuery = rs.getString("sharedUsers");
 
-            try {
-                stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-                String[] botones = { "Siguiente", "Editar", "Eliminar" };
-                if (rs.next()) {
-                    do {
-                        Integer id = rs.getInt("ID");
-                        String dniQuery = rs.getString("DNI");
-                        String nombreQuery = rs.getString("NOMBRE");
-                        String apellido1Query = rs.getString("APELLIDO1");
-                        String apellido2Query = rs.getString("APELLIDO2");
-                        String empresaQuery = rs.getString("EMPRESA");
-                        String telefonoQuery = rs.getString("TELEFONO");
-                        String correoQuery = rs.getString("CORREO");
+                    // EMPEZAMOS CON EL MENU
+                    int ventana = JOptionPane.showOptionDialog(null,
+                            "\n ID: " + id +
+                                    "\n Contenido: " + contentQuery,
+                            "GESTOR DE LA BASE DE DATOS",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            botones, botones[0]);
+                    if (ventana == 0) {
 
-                        // EMPEZAMOS CON EL MENU
-                        int ventana = JOptionPane.showOptionDialog(null,
-                                "\n DNI: " + dniQuery +
-                                        "\n Nombre: " + nombreQuery + "\n 1r Apellido: " + apellido1Query
-                                        + "\n 2º Apellido: "
-                                        + apellido2Query + "\n Empresa: " + empresaQuery + "\n Teléfono: "
-                                        + telefonoQuery + "\n Correo: "
-                                        + correoQuery,
-                                "GESTOR DE LA BASE DE DATOS",
-                                JOptionPane.DEFAULT_OPTION,
-                                JOptionPane.QUESTION_MESSAGE, null,
-                                botones, botones[0]);
-                        if (ventana == 0) {
+                    } else if (ventana == 1) {
+                        editar(id);
+                    } else if (ventana == 2) {
+                        eliminar(id);
+                    }
+                } while (rs.next());
 
-                        } else if (ventana == 1) {
-                            editar(id);
-                        } else if (ventana == 2) {
-                            eliminar(id);
-                        }
-                    } while (rs.next());
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO EXISTE NINGÚN CLIENTE CON ESOS DATOS", "ERROR AL BUSCAR",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                stmt.close();
+            } else {
+                JOptionPane.showMessageDialog(null, "NO EXISTE NINGÚN CLIENTE CON ESOS DATOS", "ERROR AL BUSCAR",
+                        JOptionPane.ERROR_MESSAGE);
             }
-            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            stmt.close();
         }
+        con.close();
+        
 
     }
 
@@ -267,25 +222,104 @@ public class App {
         // MOSTRAMOS CON UN BUCLE TODO LO QUE HA DEVUELTO LA QUERY
 
         int ventana = JOptionPane.showOptionDialog(null,
-                "¿Desea borrar a este cliente?",
-                "ELIMINAR CLIENTE DE LA BASE DE DATOS",
+                "¿Desea borrar a esta nota?",
+                "ELIMINAR NOTA DE LA BASE DE DATOS",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.WARNING_MESSAGE, null,
                 botones, botones[0]);
         if (ventana == 0) {
-            String sql = "DELETE FROM mgallegopt1.CLIENTE WHERE id = " + id;
+            String sql = "DELETE FROM notasCRUD.NOTAS WHERE id = " + id;
             stmt3.executeUpdate(sql);
-            JOptionPane.showMessageDialog(null, "SE HA ELIMINADO EL CLIENTE DE LA BASE DE DATOS",
+            JOptionPane.showMessageDialog(null, "SE HA ELIMINADO LA NOTA DE LA BASE DE DATOS",
                     "ELIMINADO CORRECTAMENTE",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "NO SE HA ELIMINADO EL CLIENTE DE LA BASE DE DATOS",
+            JOptionPane.showMessageDialog(null, "NO SE HA ELIMINADO LA NOTA DE LA BASE DE DATOS",
                     "ERROR AL ELIMINAR",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     public static void editar(Integer id) throws SQLException {
+        // PONEMOS VARIABLES A FALSE
+        boolean contentBoolean = false;
+        String newContent = "";
+
+        // HACEMOS LA QUERY
+        String query2 = "select * from notascrud.NOTAS where ID = " + id;
+
+        try {
+            stmt = con.createStatement();
+            stmt2 = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query2);
+            String[] botones = { "Guardar", "Salir" };
+
+            // MOSTRAMOS CON UN BUCLE TODO LO QUE HA DEVUELTO LA QUERY
+            while (rs.next()) {
+                String content = rs.getString("CONTENT");
+
+                // HACEMOS LAS PREGUNTAS Y LA GUARDAMOS EN VARIABLES
+                do {
+                    newContent = JOptionPane.showInputDialog(null, "INTRODUCE EL NUEVO CONTENIDO DE LA NOTA: ", content);
+
+                    if (newContent.isEmpty() || newContent.length() >= 200) {
+                        JOptionPane.showMessageDialog(null, "CONTENIDO NO VÁLIDO",
+                                "ALGO HA SALIDO MAL",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        contentBoolean = true;
+                    }
+
+                } while (newContent.isEmpty() || newContent.length() >= 200 || !contentBoolean);
+
+
+                // UNA VEZ PASADA LAS VALIDACIONES
+                if (contentBoolean) {
+                    try {
+                        String[] botones2 = { "Editar", "Salir" };
+                        // EMPEZAMOS CON EL MENU
+                        int ventana = JOptionPane.showOptionDialog(null,
+                                "\n Nuevo Contenido: " + newContent,
+                                "EDICIÓN DE UNA NOTA",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE, null,
+                                botones2, botones2[0]);
+                        if (ventana == 0) {
+                            stmt5 = con.createStatement();
+
+                            // ACTUALIZAMOS
+                            String query3 = "UPDATE notasCRUD.NOTAS SET CONTENT = '" + newContent
+                                    + "'  WHERE id = "
+                                    + id + "";
+
+                            stmt5.executeUpdate(query3);
+                            JOptionPane.showMessageDialog(null, "ACTUALIZADO CORRECTAMENTE",
+                                    "ACTUALIZACIÓN DE LA BASE DE DATOS",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "NOTA NO ACTUALIZADA",
+                                    "ERROR EN LA EDICIÓN",
+                                    JOptionPane.ERROR_MESSAGE);
+                            menuoptions();
+                        }
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        stmt5.close();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "HA OCURRIDO UN ERROR EN ALGÚN CAMPO",
+                            "ALGO HA SALIDO MAL",
+                            JOptionPane.ERROR_MESSAGE);
+                    menuoptions();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            stmt.close();
+        }
 
     }
 
