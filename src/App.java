@@ -12,6 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,7 @@ public class App {
     // VARIABLES CREAR EDITAR
 
     static Integer contadorFinal = 1;
+    static Integer idUser = 0;
     static Connection con = null;
     static Statement stmt = null;
     static Statement stmt2 = null;
@@ -51,8 +53,7 @@ public class App {
         conexionbbdd();
 
         // EJECUTA LA FUNCIÓN QUE MUESTRA EL MENÚ
-        // iniciarSesion();
-        menuoptions();
+        iniciarSesion();
     }
 
     public static void menuoptions() throws SQLException {
@@ -119,6 +120,45 @@ public class App {
         ventana.setLocationRelativeTo(null);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ventana.setVisible(true);
+
+        btnGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String textValue = txtEmail.getText();
+                String passValue = txtPassword.getText();
+                // AQUÍ LA CONSULTA
+                String query = "select ID, EMAIL, PASSWORD, NAME from notascrud.USUARIOS WHERE EMAIL = '"
+                        + textValue + "' AND PASSWORD = '"
+                        + passValue + "';";
+
+                try {
+                    stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+                    if (rs.next()) {
+                        ventana.dispose(); // Cerrar la ventana actual
+                        idUser = rs.getInt("ID");
+                        menuoptions();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "NO EXISTE NINGÚN CLIENTE CON ESOS DATOS",
+                                "ERROR AL BUSCAR",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+
+                } finally {
+                }
+
+            }
+        });
+
+        btnSalir.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ventana.dispose(); // Cerrar la ventana actual
+            }
+
+        });
 
     }
 
@@ -274,8 +314,7 @@ public class App {
         } finally {
             stmt.close();
         }
-        insertarUsuarios();
-        insertarNotas();
+        insertarDatos();
         JOptionPane.showMessageDialog(null, "BASE DE DATOS RESTAURADA");
 
     }
@@ -304,7 +343,7 @@ public class App {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
                     + "1, 'marc@gmail.com', '12345', 'Marc')");
-            stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
+            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
                     + "2, 'aaron@gmail.com', '12345', 'Aaron')");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -315,11 +354,12 @@ public class App {
 
     public static void insertarNotas() throws SQLException {
         String createString = "create table notasCRUD.NOTAS " +
-            "(ID integer NOT NULL," +
-            "CONTENT varchar(200) NOT NULL," +
-            "idUser integer NOT NULL," +
-            "sharedUsers varchar(200)," +
-            "PRIMARY KEY (ID))";
+
+                "(ID integer NOT NULL," +
+                "CONTENT varchar(200) NOT NULL," +
+                "idUser integer NOT NULL," +
+                "sharedUsers SET() NOT NULL," +
+                "PRIMARY KEY (ID))";
 
         // creacion de tabla
         try {
@@ -336,9 +376,9 @@ public class App {
         try {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "1, 'Lista de la compra', '1', '1,2')");
+                    + "1, 'Lista de la compra', '1', '1', '2')");
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "2, 'Notas ocultas', '1', '1')");
+                    + "2, 'Notas ocultas', '1', '1', '2')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -346,4 +386,8 @@ public class App {
         }
     }
 
+    public static void insertarDatos() throws SQLException {
+        insertarNotas();
+        insertarUsuarios();
+    }
 }
