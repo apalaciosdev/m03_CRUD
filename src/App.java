@@ -53,7 +53,8 @@ public class App {
         conexionbbdd();
 
         // EJECUTA LA FUNCIÓN QUE MUESTRA EL MENÚ
-        iniciarSesion();
+        // iniciarSesion();
+        menuoptions();
     }
 
     public static void menuoptions() throws SQLException {
@@ -334,7 +335,8 @@ public class App {
         } finally {
             stmt.close();
         }
-        insertarDatos();
+        insertarUsuarios();
+        insertarNotas();
         JOptionPane.showMessageDialog(null, "BASE DE DATOS RESTAURADA");
 
     }
@@ -364,7 +366,7 @@ public class App {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
                     + "1, 'marc@gmail.com', '12345', 'Marc')");
-            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
+            stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
                     + "2, 'aaron@gmail.com', '12345', 'Aaron')");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -379,7 +381,7 @@ public class App {
             "(ID integer NOT NULL," +
             "CONTENT varchar(200) NOT NULL," +
             "idUser integer NOT NULL," +
-            "sharedUsers SET() NOT NULL," +
+            "sharedUsers varchar(200)," +
             "PRIMARY KEY (ID))";
 
         // creacion de tabla
@@ -397,9 +399,9 @@ public class App {
         try {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "1, 'Lista de la compra', '1', '1', '2')");
+                    + "1, 'Lista de la compra', '1', '1,2')");
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "2, 'Notas ocultas', '1', '1', '2')");
+                    + "2, 'Notas ocultas', '1', '1')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -408,8 +410,4 @@ public class App {
     }
 
 
-    public static void insertarDatos() throws SQLException {
-       insertarNotas();
-       insertarUsuarios();
-    }
 }
