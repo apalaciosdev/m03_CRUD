@@ -209,7 +209,63 @@ public class App {
     }
 
     public static void crear() throws SQLException {
+        // PONEMOS VARIABLES A FALSE
+        String content = "";
+        String sharedUsers = idUser.toString();
 
+        boolean contentBoolean = false;
+        boolean idUserBoolean = false;
+        boolean sharedUsersBoolean = false;
+
+        // CONTENIDO DE LA NOTA
+        do {
+            content = JOptionPane.showInputDialog(null, "INTRODUCE EL CONTENIDO DE LA NOTA ");
+  
+            if (!content.isEmpty()) {
+               contentBoolean = true;
+            } 
+
+        } while (content.isEmpty() || !contentBoolean);
+
+       
+
+        if (contentBoolean) {
+            try {
+                String[] botones = { "Crear", "Limpiar", "Salir" };
+                // EMPEZAMOS CON EL MENU
+                int ventana = JOptionPane.showOptionDialog(null,
+                        "\n Contenido: " + content,
+                        "CREACIÓN DE UNA NOTA",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.INFORMATION_MESSAGE, null,
+                        botones, botones[0]);
+                if (ventana == 0) {
+                    // HACEMOS LA QUERY QUE EJECUTAMOS PARA INSERTAR LOS DATOS
+                    stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS (CONTENT, idUser, sharedUsers) VALUES (" + "'" + content + "', '" + idUser + "', '" + sharedUsers + "')");
+                    stmt.close();
+                    JOptionPane.showMessageDialog(null, "NOTA CREADA CORRECTAMENTE",
+                            "CREADA CORRECTAMENTE",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else if (ventana == 1) {
+                    crear();
+                } else if (ventana == 1) {
+                    JOptionPane.showMessageDialog(null, "NOTA NO CREADA",
+                            "ERROR EN LA CREACIÓN",
+                            JOptionPane.ERROR_MESSAGE);
+                    menuoptions();
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                stmt.close();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "HA OCURRIDO UN ERROR EN ALGÚN CAMPO",
+                    "ALGO HA SALIDO MAL",
+                    JOptionPane.ERROR_MESSAGE);
+            menuoptions();
+        }
     }
 
     public static void eliminar(Integer id) throws SQLException {
@@ -351,7 +407,7 @@ public class App {
 
     public static void insertarUsuarios() throws SQLException {
         String createString = "create table notasCRUD.USUARIOS " +
-                "(ID integer NOT NULL," +
+                "(ID integer AUTO_INCREMENT," +
                 "EMAIL varchar(70) NOT NULL UNIQUE," +
                 "PASSWORD varchar(20) NOT NULL," +
                 "NAME varchar(40) NOT NULL," +
@@ -373,8 +429,10 @@ public class App {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
                     + "1, 'marc@gmail.com', '12345', 'Marc')");
-            stmt.executeUpdate("INSERT INTO mgallegopt1.CLIENTE VALUES ("
+            stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
                     + "2, 'aaron@gmail.com', '12345', 'Aaron')");
+            stmt.executeUpdate("INSERT INTO notasCRUD.USUARIOS VALUES ("
+                    + "3, 'A', 'A', 'Aaron')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -384,12 +442,10 @@ public class App {
 
     public static void insertarNotas() throws SQLException {
         String createString = "create table notasCRUD.NOTAS " +
-
-                "(ID integer NOT NULL," +
+                "(ID INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY," +
                 "CONTENT varchar(200) NOT NULL," +
                 "idUser integer NOT NULL," +
-                "sharedUsers SET() NOT NULL," +
-                "PRIMARY KEY (ID))";
+                "sharedUsers VARCHAR(200) NOT NULL)";
 
         // creacion de tabla
         try {
@@ -406,9 +462,9 @@ public class App {
         try {
             stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "1, 'Lista de la compra', '1', '1', '2')");
+                    + "1, 'Lista de la compra', '1', '1,2')");
             stmt.executeUpdate("INSERT INTO notasCRUD.NOTAS VALUES ("
-                    + "2, 'Notas ocultas', '1', '1', '2')");
+                    + "2, 'Notas ocultas', '1', '1,2')");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
